@@ -68,51 +68,44 @@ Rules:
 Respond ONLY with a JSON array of strings. No preamble, no markdown, no backticks. Example:
 ["Left a senior role at Company X after 2 years to join an early-stage startup","Relocated to a new city without a job lined up","Built a prototype while working full-time"]`;
 
-const MIRROR_PROMPT = `You are an interpretation mirror for talent investors. Your job is to make invisible judgment patterns visible — with surgical precision and zero lecturing. Think of yourself as helping the evaluator learn and sharpen their framework over time.
+const MIRROR_PROMPT = `You are an honest mirror for talent investors. Surgical. No diplomacy. No lecturing. Just the truth about what happened in their reasoning.
+
+CRITICAL: Not every candidate is exceptional. Most aren't. Your job is to reflect reality, not find signal where there is none. If the evaluator is projecting a trait onto thin evidence, say so bluntly. If a trait just isn't there, say "not there" — that's valuable, not a failure.
 
 You will receive:
-1. The evaluator's FRAMEWORK CRITERIA (what they say they look for)
+1. The evaluator's FRAMEWORK CRITERIA
 2. EXTRACTED FACTS from the conversation
 3. The evaluator's INTERPRETATIONS of each fact
-4. The evaluator's ADDITIONAL COMMENTS — things they noticed that the structured facts didn't capture, gut reactions, self-observations. These are raw and honest; weight them in your analysis.
+4. The evaluator's ADDITIONAL COMMENTS — gut reactions, things the structured flow missed
 5. The original TRANSCRIPT
 
-Your job: produce a structured mirror analysis.
+For each criterion, assign ONE status:
+- THERE: Genuine evidence exists. The trait showed up and the evaluator caught it.
+- STRETCHED: The evaluator says it's there, but the evidence is thin, ambiguous, or they're projecting. Be specific about the gap between what they wrote and what the transcript actually shows.
+- NOT THERE: The trait isn't demonstrated. Could be because the candidate doesn't have it, or the conversation never went there — explain which, briefly.
 
-For each framework criterion, determine:
-- USED: The evaluator's interpretations directly engaged this criterion
-- DRIFTED: The transcript contains evidence relevant to this criterion, but the evaluator interpreted it as something else or missed it. Cite the specific moment (approximate location in transcript).
-- UNSURFACED: Nothing in the conversation touched this criterion. It's a gap in the conversation, not in the evaluator's thinking.
+Also identify interpretations that don't map to any stated criterion. These are EMERGING PATTERNS — things the evaluator keeps noticing outside their framework. Could be worth adding as criteria.
 
-Also identify: interpretations that don't map to any stated criterion. These are EMERGING PATTERNS — things the evaluator is noticing that their current framework doesn't capture. Frame these as potential additions to the framework, not as errors.
-
-Finally, write a brief natural-language summary (3-5 sentences) that reads like a candid debrief note to the evaluator. Conversational, direct, no jargon. Tell them what their reasoning actually looked like vs what they said they'd look for.
+Write a debrief that's 3-5 sentences, brutally honest, like you're telling a friend over coffee what you actually think of their assessment. If they're seeing what they want to see, say it. If the candidate is mediocre on their stated criteria, say it. No hedging.
 
 Respond ONLY with JSON, no preamble, no markdown, no backticks:
 {
   "criteria_analysis": [
     {
       "criterion": "the criterion text",
-      "status": "used" | "drifted" | "unsurfaced",
-      "evidence": "brief explanation — if drifted, cite what was in the transcript and how it was interpreted differently. if used, cite which interpretations mapped here. if unsurfaced, say so plainly.",
-      "mapped_interpretations": [0, 2]
+      "status": "there" | "stretched" | "not_there",
+      "evidence": "1-2 sentences. Be specific and honest."
     }
   ],
   "emerging_patterns": [
     {
       "interpretation_index": 3,
       "interpretation_text": "the interpretation",
-      "pattern_name": "A short label for the emerging criterion (e.g., 'Bias toward narrative coherence')",
-      "suggestion": "One sentence suggesting how this could become an explicit criterion — framed as a learning opportunity, not a flaw"
+      "pattern_name": "Short label (e.g., 'Narrative coherence bias')",
+      "suggestion": "One sentence — could this be a real criterion?"
     }
   ],
-  "summary": {
-    "criteria_used": 2,
-    "criteria_total": 4,
-    "drift_detected": true,
-    "key_insight": "One sentence — the most important thing the evaluator should sit with",
-    "debrief": "3-5 sentence natural language debrief. Conversational and direct. Example tone: 'You said you look for X, Y, and Z. In practice, you leaned heavily on X — almost half your interpretations mapped there. Y showed up in the conversation but you read it as something else. And you kept noticing [pattern] which isn't in your framework at all. Worth asking whether that belongs there.'"
-  }
+  "debrief": "3-5 sentences. Honest. Direct. No hedging. Tell them what their reasoning actually looked like."
 }`;
 
 // ─── STYLES ───
@@ -663,11 +656,11 @@ function InterpretStep({ facts, setFacts, interpretations, setInterpretations, c
 
 function StatusBadge({ status }) {
   const config = {
-    used: { color: palette.green, label: "USED", icon: "✓" },
-    drifted: { color: palette.amber, label: "DRIFTED", icon: "⚠" },
-    unsurfaced: { color: palette.textDim, label: "UNSURFACED", icon: "—" },
+    there: { color: palette.green, label: "THERE", icon: "✓" },
+    stretched: { color: palette.amber, label: "STRETCHED", icon: "~" },
+    not_there: { color: palette.red, label: "NOT THERE", icon: "✗" },
   };
-  const c = config[status] || config.unsurfaced;
+  const c = config[status] || config.not_there;
   return (
     <span
       style={{
@@ -689,7 +682,7 @@ function StatusBadge({ status }) {
 function MirrorStep({ mirrorData, facts, interpretations, onReset }) {
   if (!mirrorData) return null;
 
-  const { criteria_analysis, emerging_patterns, summary } = mirrorData;
+  const { criteria_analysis, emerging_patterns, debrief } = mirrorData;
 
   return (
     <div style={{ animation: "fadeIn 0.6s ease" }}>
@@ -710,8 +703,8 @@ function MirrorStep({ mirrorData, facts, interpretations, onReset }) {
         No advice. No score. Just what your reasoning actually looked like.
       </p>
 
-      {/* Debrief — natural language summary */}
-      {summary?.debrief && (
+      {/* Debrief */}
+      {debrief && (
         <div
           style={{
             background: palette.surface,
@@ -721,18 +714,6 @@ function MirrorStep({ mirrorData, facts, interpretations, onReset }) {
             marginBottom: 32,
           }}
         >
-          <div
-            style={{
-              fontFamily: fonts.mono,
-              fontSize: 10,
-              letterSpacing: "0.12em",
-              textTransform: "uppercase",
-              color: palette.accent,
-              marginBottom: 16,
-            }}
-          >
-            Your Debrief
-          </div>
           <p
             style={{
               fontFamily: fonts.display,
@@ -743,89 +724,13 @@ function MirrorStep({ mirrorData, facts, interpretations, onReset }) {
               margin: 0,
             }}
           >
-            {summary.debrief}
+            {debrief}
           </p>
         </div>
       )}
 
-      {/* Summary stats */}
-      <div
-        style={{
-          display: "flex",
-          gap: 16,
-          marginBottom: 32,
-        }}
-      >
-        <div
-          style={{
-            flex: 1,
-            background: palette.surface,
-            border: `1px solid ${palette.border}`,
-            borderRadius: 8,
-            padding: "16px 20px",
-            textAlign: "center",
-          }}
-        >
-          <div style={{ fontFamily: fonts.display, fontSize: 28, color: palette.accent, fontWeight: 400 }}>
-            {summary?.criteria_used || 0}/{summary?.criteria_total || 0}
-          </div>
-          <div style={{ fontFamily: fonts.mono, fontSize: 10, color: palette.textDim, marginTop: 4, letterSpacing: "0.06em" }}>
-            CRITERIA USED
-          </div>
-        </div>
-        {summary?.drift_detected && (
-          <div
-            style={{
-              flex: 1,
-              background: palette.surface,
-              border: `1px solid ${palette.amber}30`,
-              borderRadius: 8,
-              padding: "16px 20px",
-              textAlign: "center",
-            }}
-          >
-            <div style={{ fontFamily: fonts.display, fontSize: 28, color: palette.amber, fontWeight: 400 }}>⚠</div>
-            <div style={{ fontFamily: fonts.mono, fontSize: 10, color: palette.amber, marginTop: 4, letterSpacing: "0.06em" }}>
-              DRIFT DETECTED
-            </div>
-          </div>
-        )}
-        {emerging_patterns?.length > 0 && (
-          <div
-            style={{
-              flex: 1,
-              background: palette.surface,
-              border: `1px solid ${palette.green}30`,
-              borderRadius: 8,
-              padding: "16px 20px",
-              textAlign: "center",
-            }}
-          >
-            <div style={{ fontFamily: fonts.display, fontSize: 28, color: palette.green, fontWeight: 400 }}>
-              {emerging_patterns.length}
-            </div>
-            <div style={{ fontFamily: fonts.mono, fontSize: 10, color: palette.green, marginTop: 4, letterSpacing: "0.06em" }}>
-              NEW PATTERNS
-            </div>
-          </div>
-        )}
-      </div>
-
-      {/* Criteria breakdown */}
+      {/* Criteria */}
       <div style={{ marginBottom: 36 }}>
-        <div
-          style={{
-            fontFamily: fonts.mono,
-            fontSize: 10,
-            letterSpacing: "0.12em",
-            textTransform: "uppercase",
-            color: palette.textDim,
-            marginBottom: 16,
-          }}
-        >
-          Criteria Analysis
-        </div>
-
         {(criteria_analysis || []).map((ca, i) => (
           <div
             key={i}
@@ -846,25 +751,6 @@ function MirrorStep({ mirrorData, facts, interpretations, onReset }) {
             <p style={{ fontFamily: fonts.body, fontSize: 13, color: palette.textMuted, lineHeight: 1.6, margin: 0 }}>
               {ca.evidence}
             </p>
-            {ca.mapped_interpretations?.length > 0 && (
-              <div style={{ marginTop: 12, display: "flex", flexWrap: "wrap", gap: 6 }}>
-                {ca.mapped_interpretations.map((idx) => (
-                  <span
-                    key={idx}
-                    style={{
-                      fontFamily: fonts.mono,
-                      fontSize: 10,
-                      color: palette.textDim,
-                      background: palette.tagBg,
-                      padding: "3px 8px",
-                      borderRadius: 3,
-                    }}
-                  >
-                    Fact {idx + 1}
-                  </span>
-                ))}
-              </div>
-            )}
           </div>
         ))}
       </div>
