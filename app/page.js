@@ -10,45 +10,69 @@ const DEFAULT_CRITERIA = [
   "Relentless dissatisfaction — refusing to stay comfortable",
 ];
 
-const SAMPLE_TRANSCRIPT = `Interviewer: So tell me about your journey. What were you doing before this?
+const SAMPLE_TRANSCRIPT = `Investor: Hey, good to connect. So tell me a bit about what you're building.
 
-Candidate: I was at McKinsey for about two and a half years, mostly in the Delhi office. I joined straight out of IIT Bombay. It was the obvious path — campus placement, good brand, parents were thrilled. I was on the TMT practice, working on telco strategy mostly.
+Founder: Yeah, so we're building autonomous inspection drones for industrial facilities. Refineries, power plants, that kind of thing. The core tech is our navigation stack — we can fly without GPS, which is critical inside metal structures where GPS gets blocked.
 
-Interviewer: And what made you leave?
+Investor: Got it. And what's your background? How'd you get into this?
 
-Candidate: Honestly, I was good at it. That was the problem. I kept getting staffed on these massive transformation projects, and I'd do well, get great reviews, but I never felt like I was building anything. Every deck I made was a recommendation that someone else would implement — or more often, wouldn't. I remember this one project where we spent four months on a digital transformation roadmap for a large telco. Beautiful work. They shelved it two weeks after we presented. And I thought, I just spent four months of my life on a PDF.
+Founder: So I'm from IIT Delhi, engineering physics. Was working as a research associate after graduation, doing a drone project in the lab. And the basic problem was every time we needed to test, we had to walk a kilometer to the ground outside. And I was like, why can't we fly inside? That sent me down a rabbit hole on GPS dependency in drones.
 
-Interviewer: So you went straight into starting something?
+Investor: And when did you start the company?
 
-Candidate: Not exactly. I first joined a Series B edtech company as a product manager. I thought maybe I just needed to be on the building side. But it was... comfortable? They had product-market fit, they had funding, my job was basically optimizing conversion funnels. Important work, but I was employee number 180. Nobody needed me specifically.
+Founder: 2021, during COVID basically. Got incubated at IIT Delhi, raised about 1.5 crores from a small VC.
 
-Interviewer: How long were you there?
+Investor: Okay. And then what happened? Walk me through it.
 
-Candidate: Eight months. My manager was confused when I left. He said I was on track for a promotion. But I'd started tinkering on weekends with this idea around vernacular content for blue-collar workers — short video tutorials for things like appliance repair, basic electrical work. I was going to Nehru Place on weekends, talking to these repair shop guys, filming them, putting stuff on YouTube. It started getting traction. Like, real traction — 50K views on some videos with zero marketing spend.
+Founder: Honestly, 2021 to 2023 was brutal. Our drones kept failing. We'd get them flying for two, three meters and then they'd lose tracking at any real velocity. The check we raised was too small to hire the talent we needed. So we ended up pivoting — instead of just selling the software stack, we built our own drone with all the cameras integrated.
 
-Interviewer: And that became your startup?
+Investor: So you went from software-only to full hardware?
 
-Candidate: Yeah. I quit and went full-time on it. No funding, no co-founder initially. I burned through my McKinsey savings in about five months. My parents were... let's say unsupportive. I was living in a PG in Lajpat Nagar, which was a significant lifestyle downgrade from McKinsey. But the users were real. I had repair shop owners calling me asking for more videos. One guy in Patna told me he learned to fix washing machines from my videos and now that's half his business. That's when I knew it wasn't a hobby.
+Founder: Yeah. Which was not the plan. But we couldn't make the software reliable on other people's hardware. The integration problems were killing us.
 
-Interviewer: What happened with funding?
+Investor: Okay. So where are you today? Revenue, customers?
 
-Candidate: I got rejected by everybody. Every VC said the same thing — great mission, unclear monetization. Which was fair, I didn't have a revenue model. I was just making content. But then I met this angel investor at a random event in Koramangala — I wasn't even supposed to be in Bangalore, I'd gone for a friend's wedding and crashed this startup meetup. She wrote me a 25 lakh cheque on basically a handshake. That kept us alive for another eight months.
+Founder: So we've got two tracks. Defense, where we have an MOU for 10 drones, could extend to hundreds — that's a 10 to 20 crore order book potentially. And then warehouse automation, which is the enterprise play. We're deployed at one Mahindra Logistics warehouse in Mumbai, about one lakh square feet. And we've got TCI and another logistics company doing paid demos.
 
-Interviewer: You said "us" — when did you get a co-founder?
+Investor: What's the warehouse revenue look like?
 
-Candidate: So this is actually a weird story. I posted a job listing on LinkedIn for a video editor. This guy applies, and his resume is completely wrong for the role — he's a backend engineer from Flipkart. But his cover letter was incredible. He'd been watching all our videos, had built a small recommendation engine on his own time that could match repair tutorials to user queries. I didn't hire him as an editor. I brought him on as co-founder. That was probably the best decision I've made.
+Founder: Right now, 50,000 per month per warehouse. We're projecting 8 lakhs per month once we hit 50 warehouses.
 
-Interviewer: Where did it go from there?
+Investor: That's a big jump. From one warehouse to fifty. What gives you confidence on that?
 
-Candidate: We pivoted hard. Moved from just video content to a full marketplace — connecting repair professionals with customers, with the training content as the acquisition funnel. Got into Y Combinator's batch, raised a seed round. We're at about 2,000 monthly active service providers now across three cities.
+Founder: The unit economics work. A pilot used to cost 30K for the drone pilot alone, plus 10-15K accommodation. We eliminate that entirely. And we don't need any warehouse modifications — that's our edge over ground robots.
 
-Interviewer: What's been the hardest part?
+Investor: But you said you're on pause with Mahindra. What happened there?
 
-Candidate: The pivot was brutal. We had users who loved the content and suddenly we're asking them to change their behavior completely — list on a marketplace, accept digital payments, manage bookings. Half our most engaged content users never converted to the marketplace. I had to accept that the thing people loved about us wasn't the thing that would make us a business. That was a hard lesson. I still think about it.
+Founder: We hit some technical issues. Once we solve those, we'll go back.
 
-Interviewer: If you could go back and change anything, what would it be?
+Investor: What kind of technical issues?
 
-Candidate: I would have left McKinsey earlier. Every month I stayed was a month I was getting more comfortable with a life that wasn't mine. The edtech job too — I knew within the first month it wasn't right, but I stayed eight months because leaving quickly looks bad on your resume. I optimized for what other people would think instead of what I actually knew. That's the thing I'd change — I'd trust my own signal faster.`;
+Founder: It's... navigation accuracy in certain sections of the warehouse. Where there's heavy metal shelving, our tracking drifts. We're working on a landmark-based correction system.
+
+Investor: Okay. And how much have you raised total so far?
+
+Founder: About 4.2 crores. And we're raising now — we have term sheets for about 30 crores total. 25 from one investor, 5 from another.
+
+Investor: 30 crores is a big round for your stage. What's FY25 revenue?
+
+Founder: 60 lakhs.
+
+Investor: 60 lakhs revenue and you're raising 30 crores. That's... help me understand the logic there.
+
+Founder: It's primarily for the defense pipeline and scaling the warehouse deployments. Research lab costs, production capital. It's coming in tranches — first 12.5, then another 12.5 after milestones.
+
+Investor: Got it. And on the defense side — you said MOU for 10 drones. Is that signed? Paid?
+
+Founder: MOU is signed. Payment comes on delivery. We haven't delivered yet.
+
+Investor: Okay. Is there a way for us to speak to someone on the warehouse customer side? Like, someone senior at Mahindra who's actually used the product? That's really what we'd need to go deeper.
+
+Founder: Yeah, definitely. I can arrange that. I can even connect you with army guys if you want.
+
+Investor: Let's start with the warehouse customer. That's the premise for us — the industrial automation angle. Let's do that and then regroup.
+
+Founder: Sounds good. I'll set it up.`;
 
 // ─── AI PROMPTS ───
 const FACT_EXTRACTION_PROMPT = `You are a precise fact extractor for talent evaluation conversations. 
@@ -90,7 +114,7 @@ For each criterion, assign ONE status:
 - STRETCHED: Some surface evidence exists, but it's mostly the candidate's self-report, or the evaluator is reading more into it than the evidence supports. Be specific about what's a claim vs. what's a fact.
 - NOT THERE: The trait isn't demonstrated by evidence. The candidate may have told a story that sounds like this trait, but telling a story about resourcefulness is not the same as demonstrating resourcefulness.
 
-For the evidence field on each criterion: always separate "the candidate said X" from "the evidence shows Y." If the only evidence is the candidate's own narrative, say so. That's not automatically disqualifying — but the evaluator should know they're trusting the story, not observing the behavior.
+For the evidence field on each criterion: always separate "the candidate said X" from "the evidence shows Y." If the only evidence is the candidate's own narrative, say so. That's not automatically disqualifying — but the evaluator should know they're trusting the story, not observing the behavior. IMPORTANT: When there is tension between the evaluator's interpretation and the evidence (they were skeptical but evidence looks okay, or they were generous but evidence is thin), END the evidence field with a direct question to the evaluator. Examples: "What specifically made you skeptical here despite the surface evidence?" or "You gave this a positive read — but is that based on what they did, or how they described it?" The question should sharpen their thinking, not lead them to an answer.
 
 Also identify interpretations that don't map to any stated criterion. These are EMERGING PATTERNS — things the evaluator keeps noticing outside their framework. Could be worth adding as criteria.
 
